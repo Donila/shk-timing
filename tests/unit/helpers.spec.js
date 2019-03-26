@@ -93,7 +93,7 @@ describe('urlConverter tests', () => {
   })
 })
 
-describe('attack tests', () => {
+describe('army tests', () => {
   it('armyToEditableModel with 1.5h time', () => {
     let army = { time: 3600 * 1.5, ...attackHelper.defaultArmy() }
     let result = armyHelper.toEditableModel(army)
@@ -101,11 +101,18 @@ describe('attack tests', () => {
     expect(result.m === 30);
   })
 
-  it('armyFromEditableModel with 1.5h time', () => {
-    let army = { h: 1, m: 30, s: 0, ...attackHelper.defaultArmy() }
+  it('armyFromEditableModel with 1h30m01s time', () => {
+    let army = { h: 1, m: 30, s: 1, speed: 1, delay: 0, name: 'test' }
     let result = armyHelper.fromEditableModel(army)
     expect(result.time).to.be.a('number')
-    expect(result.time === 3600);
+    expect(result.time).eq(5401);
+  })
+
+  it('armyFromEditableModel with 1h time on 2x speed', () => {
+    let army = { h: 1, m: 0, s: 0, speed: 2, delay: 0, name: 'test' }
+    let result = armyHelper.fromEditableModel(army)
+    expect(result.time).to.be.a('number')
+    expect(result.time).eq(1800);
   })
 
   it('humanizeArmyTime 1h 1m 1s to 1:01:01', () => {
@@ -116,6 +123,33 @@ describe('attack tests', () => {
   it('humanizeArmyTime 0h 10m 10s to 0:10:10', () => {
     let result = armyHelper.humanizeArmyTime(0, 10, 10)
     expect(result).eq('0:10:10')
+  })
+
+  it('army buildXTable with 1h time', () => {
+    let army = { time: 3600 }
+    let result = armyHelper.buildXTable(army)
+    expect(result).to.be.an('array')
+    expect(result.length).eq(6);
+    expect(result[0]).eq(3600);
+    expect(result[1]).eq(1800);
+  })
+
+  it('army whenToGo for 22:00, 1h duration on 2x with 10s delay', () => {
+    let army = { time: 3600, delay: 10, speed: 2 }
+    let time = '2200'
+    let result = armyHelper.whenToGo(army, time)
+
+    expect(result.format('HH:mm:ss')).eq('21:30:10')
+  })
+})
+
+describe('attack tests', () => {
+  it('attack convertTimeInput from 1825 to {hours: 18, minutes: 25}', () => {
+    let input = 1825
+    let result = attackHelper.convertTimeInput(input)
+
+    expect(result.hours).eq(18)
+    expect(result.minutes).eq(25)
   })
 })
 

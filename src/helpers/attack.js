@@ -22,8 +22,16 @@ const emptyAttack = () => {
   }
 }
 
+const convertTimeInput = (input) => {
+  let hours = Math.floor(input / 100)
+  let minutes = input - hours * 100
+
+  return { hours, minutes }
+}
+
 export {
   defaultArmy,
   defaultAttack,
-  emptyAttack
+  emptyAttack,
+  convertTimeInput
 }

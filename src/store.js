@@ -33,6 +33,22 @@ let store = {
     Object.assign(this.state.armies[index], army)
 
     console.log(`state changed(Edit Army) to ${JSON.stringify(this.state)}`);
+  },
+
+  changeSpeed(army, speed) {
+    let index = this.state.armies.findIndex(a => a.name === army.name)
+    this.state.armies[index].speed = speed
+    console.log(`state changed - speed of ${JSON.stringify(this.state.armies[index])}`);
+  },
+
+  newAttack() {
+    this.state = defaults.emptyAttack()
+    console.log('state changed - attack reset to empty');
+  },
+
+  changeTime(time) {
+    this.state.time = time
+    console.log(`state changed - attack time to ${time}`);
   }
 }
 

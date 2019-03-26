@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <div>
+      <TimeX/>
       <ArmiesTable/>
       <v-btn class="button" @click="addArmy()">Add Empty Army</v-btn>
       <v-btn class="button success" @click="share()">Share Link</v-btn>
@@ -13,11 +14,13 @@ import * as urlConverter from '@/helpers/urlConverter';
 import * as attackHelper from '@/helpers/attack';
 
 import ArmiesTable from '@/components/ArmiesTable';
+import TimeX from '@/components/TimeX';
 
 export default {
   name: 'Main',
   components: {
-    ArmiesTable
+    ArmiesTable,
+    TimeX
   },
   data() {
     return {
@@ -44,7 +47,7 @@ export default {
     addArmy() {
       this.store.addArmy({
         name: `Army ${Math.random()}`,
-        time: '07:40',
+        time: 3600,
         delay: this.random(0, 15),
         speed: this.random(1, 6)
       });
@@ -55,6 +58,14 @@ export default {
     },
     random(min, max) {
       return Math.floor(Math.random() * max) + min;
+    },
+    copyToClipboard(str) {
+      const el = document.createElement('textarea');
+      el.value = str;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
     }
   },
   mounted() {

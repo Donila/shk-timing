@@ -3,7 +3,7 @@
     <v-toolbar flat color="dark">
       <v-toolbar-title>Armies table</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-dialog v-model="dialog" max-width="500px">
+      <v-dialog v-model="dialog" max-width="500px" persistent>
         <template v-slot:activator="{ on }">
           <v-btn color="primary" dark class="mb-2" v-on="on">New Army</v-btn>
         </template>
@@ -54,6 +54,7 @@
                   <v-flex xs12 sm6 md6>
                     <v-text-field
                       ref="delay"
+                      type="number"
                       v-model="editedItem.delay"
                       label="Delay"
                       :rules="[rules.delay]"
@@ -87,6 +88,7 @@
       :items="editableArmies"
       :custom-sort="customSort"
       class="elevation-2"
+      hide-actions
     >
       <template v-slot:items="props">
         <td class="text-xs-left">
@@ -94,9 +96,19 @@
           <v-icon small @click="deleteItem(props.item)">delete</v-icon>
         </td>
         <td>{{ props.item.name }}</td>
-        <td class="text-xs-left">{{ humanizeArmyTime(props.item.h, props.item.m, props.item.s) }}</td>
+        <td class="text-xs-left">{{ whenToGo(props.item) }}</td>
+        <td class="text-xs-left">{{ secondsToDuration(secondsLeft[props.item.name]) }}</td>
+
         <td class="text-xs-left">{{ props.item.delay }}</td>
-        <td class="text-xs-left">{{ props.item.speed }}</td>
+        <td
+          v-for="(speed, index) in speeds"
+          :key="speed.value"
+          :class="{ 'indigo darken-4': props.item.speed - 1 == index }"
+        >
+          <a
+            @click="changeSpeed(props.item, speed.value)"
+          >{{ stringifyArmyTime(buildXTable(props.item)[index]) }}</a>
+        </td>
       </template>
 
       <template v-slot:no-data>
@@ -108,19 +120,21 @@
 
 <script>
 import * as armyHelper from '@/helpers/army';
+import * as timeHelper from '@/helpers/time';
 
 export default {
   data() {
     return {
       store: this.$root.$data,
-      //armies: [],
+      speeds: armyHelper.SPEEDS,
 
       dialog: false,
       editing: null,
       snack: false,
       snackColor: '',
       snackText: '',
-      max25chars: v => v.length <= 25 || 'Input too long!',
+      counters: [],
+      intervals: [],
       headers: [
         {
           text: 'Actions',
@@ -131,11 +145,17 @@ export default {
           text: 'Army Name',
           align: 'left',
           value: 'name',
-          sortable: true
+          sortable: false
         },
-        { text: 'Time' },
+        { text: 'When to go', sortable: true, value: 'time' },
+        { text: 'Countdown', sortable: true, value: 'time' },
         { text: 'Delay', value: 'delay' },
-        { text: 'Speed', value: 'speed' }
+        { text: '1x', sortable: false },
+        { text: '2x', sortable: false },
+        { text: '3x', sortable: false },
+        { text: '4x', sortable: false },
+        { text: '5x', sortable: false },
+        { text: '6x', sortable: false }
       ],
 
       editedIndex: -1,
@@ -160,7 +180,8 @@ export default {
 
       rules: {
         required: value => !!value || 'Required.',
-        counter: value => value.length <= 20 || 'Max 20 characters',
+        number: value => typeof value === 'number' || 'Value must be a number',
+        counter: value => value.length <= 50 || 'Max 50 characters',
         delay: value =>
           (value > -60 && value < 60) || 'Delay must be from -59 to 59',
         hours: value => !isNaN(value) || 'Hours must be number',
@@ -177,9 +198,11 @@ export default {
         return null;
       }
     },
-    humanizeArmyTime(h, m, s) {
-      return armyHelper.humanizeArmyTime(h, m, s);
+
+    stringifyArmyTime(time) {
+      return armyHelper.stringifyArmyTime(time);
     },
+
     editItem(item) {
       this.editedItem = { ...item };
       this.dialog = true;
@@ -199,17 +222,27 @@ export default {
         this.editedIndex = -1;
       }, 300);
     },
-    formValid() {
+
+    armyValid() {
+      if (
+        this.editItem.h === 0 &&
+        this.editItem.m === 0 &&
+        this.editItem.s === 0
+      ) {
+        return false;
+      }
       if (this.$refs && this.$refs.form) {
         return this.$refs.form.validate();
       }
       return false;
     },
+
     save() {
-      if (this.formValid()) {
+      if (this.armyValid()) {
         this.saveArmy();
       }
     },
+
     saveArmy() {
       let army = armyHelper.fromEditableModel(this.editedItem);
       if (this.editing) {
@@ -217,33 +250,66 @@ export default {
       } else {
         this.store.addArmy(army);
       }
-      this.armies = this.editableArmies;
+
       this.close();
     },
-    changeSort(column) {
-      if (this.pagination.sortBy === column) {
-        this.pagination.descending = !this.pagination.descending;
-      } else {
-        this.pagination.sortBy = column;
-        this.pagination.descending = false;
-      }
+
+    buildXTable(army) {
+      return armyHelper.buildXTable(army);
     },
+
+    changeSpeed(army, speed) {
+      this.store.changeSpeed(army, speed);
+    },
+
     customSort(items, index, isDescending) {
-      // The following is informations as far as I researched.
-      // items: 'food' items
-      // index: Enabled sort headers value. (black arrow status).
-      // isDescending: Whether enabled sort headers is desc
       items.sort((a, b) => {
         if (index === 'delay') {
           if (isDescending) {
-            return b.calories - a.calories;
+            return b.delay - a.delay;
           } else {
-            return a.calories - b.calories;
+            return a.delay - b.delay;
+          }
+        }
+        if (index === 'time') {
+          if (isDescending) {
+            return timeHelper.fullTime(b) - timeHelper.fullTime(a);
+          } else {
+            return timeHelper.fullTime(a) - timeHelper.fullTime(b);
           }
         }
       });
 
       return items;
+    },
+
+    whenToGo(army) {
+      return armyHelper
+        .whenToGo(army, this.store.state.time)
+        .format('HH:mm:ss');
+    },
+
+    whenToGoCounter(army) {
+      return armyHelper.whenToGoCounter(army, this.store.state.time);
+    },
+
+    setCountDown(army) {
+      if (this.intervals[army.name]) {
+        clearInterval(this.intervals[army.name]);
+      }
+      this.intervals[army.name] = setInterval(() => {
+        const seconds = armyHelper.whenToGoCounter(army, this.store.state.time);
+
+        this.$set(this.counters, army.name, seconds);
+      }, 1000);
+    },
+
+    setCountDowns() {
+      this.store.state.armies.map(this.setCountDown);
+    },
+
+    secondsToDuration(seconds) {
+      return timeHelper.secondsToDuration(seconds);
     }
   },
   computed: {
@@ -258,11 +324,18 @@ export default {
       } else {
         return [];
       }
+    },
+    secondsLeft() {
+      return this.counters;
     }
   },
   watch: {
     dialog(val) {
       val || this.close();
+    },
+    editableArmies(val) {
+      this.setCountDowns();
+      console.log(`army changed: ${val}`);
     }
   }
 };
