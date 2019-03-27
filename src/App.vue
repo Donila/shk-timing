@@ -2,7 +2,7 @@
   <div>
     <v-app dark>
       <v-toolbar fixed app>
-        <v-toolbar-title>Stronghold Kingdoms Timing Attacks</v-toolbar-title>
+        <v-toolbar-title>{{ $t("title") }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-sm-and-down">
           <v-btn flat @click="home()">new attack</v-btn>
