@@ -16,18 +16,18 @@
       </v-toolbar>
 
       <v-container>
-        <v-stepper v-model="helpStep" vertical>
+        <v-stepper v-model="helpStep" :vertical="$vuetify.breakpoint.mdAndUp">
           <v-stepper-step :complete="helpStep > 1" step="1">{{ $t('step1Title') }}</v-stepper-step>
 
           <v-stepper-content step="1">
             <v-card>
-              <v-layout>
-                <v-flex xs5>
+              <v-layout :row="$vuetify.breakpoint.mdAndUp" :column="$vuetify.breakpoint.smAndDown">
+                <v-flex xs12 md5>
                   <v-responsive>
                     <v-img :src="steps[0].url" class="grey darken-4"></v-img>
                   </v-responsive>
                 </v-flex>
-                <v-flex xs7>
+                <v-flex xs12 md7>
                   <v-card-title>
                     <div class="headline">{{ $t('step1Title') }}</div>
                   </v-card-title>
@@ -41,13 +41,13 @@
           <v-stepper-step :complete="helpStep > 2" step="2">{{ $t('step2Title') }}</v-stepper-step>
           <v-stepper-content step="2">
             <v-card>
-              <v-layout>
-                <v-flex xs5>
+              <v-layout :row="$vuetify.breakpoint.mdAndUp" :column="$vuetify.breakpoint.smAndDown">
+                <v-flex xs12 md5>
                   <v-responsive>
                     <v-img :src="steps[1].url" class="grey darken-4"></v-img>
                   </v-responsive>
                 </v-flex>
-                <v-flex xs7>
+                <v-flex xs12 md7>
                   <v-card-title>
                     <div class="headline">{{ $t('step2Title') }}</div>
                   </v-card-title>
@@ -62,13 +62,13 @@
           <v-stepper-step :complete="helpStep > 3" step="3">{{ $t('step3Title') }}</v-stepper-step>
           <v-stepper-content step="3">
             <v-card>
-              <v-layout>
-                <v-flex xs5>
+              <v-layout :row="$vuetify.breakpoint.mdAndUp" :column="$vuetify.breakpoint.smAndDown">
+                <v-flex xs12 md5>
                   <v-responsive>
                     <v-img :src="steps[2].url" class="grey darken-4"></v-img>
                   </v-responsive>
                 </v-flex>
-                <v-flex xs7>
+                <v-flex xs12 md7>
                   <v-card-title>
                     <div class="headline">{{ $t('step3Title') }}</div>
                   </v-card-title>
