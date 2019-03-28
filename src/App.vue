@@ -5,9 +5,9 @@
         <v-toolbar-title>{{ $t("title") }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-sm-and-down">
-          <v-btn flat @click="home()">new attack</v-btn>
-          <v-btn flat @click="about()">about</v-btn>
-          <v-btn flat @click="help()">help</v-btn>
+          <Languages/>
+          <v-btn flat @click="home()">{{ $t('newAttack') }}</v-btn>
+          <Help/>
         </v-toolbar-items>
       </v-toolbar>
       <v-content>
@@ -21,9 +21,17 @@
 </template>
 
 <script>
+import Help from '@/components/Help';
+import Languages from '@/components/Languages';
+
 export default {
+  components: {
+    Help,
+    Languages
+  },
   data() {
     return {
+      helpDialog: false,
       store: this.$root.$data
     };
   },

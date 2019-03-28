@@ -26,7 +26,7 @@ const toEditableModel = (army) => {
 }
 
 const fromEditableModel = (model) => {
-  let time = +(model.h * secondsInHour + model.m * secondsInMinute + model.s) / model.speed
+  let time = +(model.h * secondsInHour + model.m * secondsInMinute + model.s) * model.speed
 
   return {
     time: time,

@@ -1,11 +1,11 @@
 <template>
   <div>
     <v-toolbar flat color="dark">
-      <v-toolbar-title>Armies table</v-toolbar-title>
+      <v-toolbar-title>{{ $t('armiesTable') }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" max-width="500px" persistent>
         <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark class="mb-2" v-on="on">New Army</v-btn>
+          <v-btn color="primary" dark class="mb-2" v-on="on">{{ $t('newArmy') }}</v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -20,7 +20,7 @@
                     <v-text-field
                       ref="name"
                       v-model="editedItem.name"
-                      label="Army name"
+                      :label="$t('armyName')"
                       :rules="[rules.required, rules.counter]"
                     ></v-text-field>
                   </v-flex>
@@ -28,7 +28,7 @@
                     <v-text-field
                       ref="h"
                       v-model="editedItem.h"
-                      label="Hours"
+                      :label="$t('hours')"
                       :rules="[rules.hours]"
                       :mask="numberMask"
                     ></v-text-field>
@@ -37,7 +37,7 @@
                     <v-text-field
                       ref="m"
                       v-model="editedItem.m"
-                      label="Minutes"
+                      :label="$t('minutes')"
                       :rules="[rules.minSec]"
                       :mask="numberMask"
                     ></v-text-field>
@@ -46,7 +46,7 @@
                     <v-text-field
                       ref="s"
                       v-model="editedItem.s"
-                      label="Seconds"
+                      :label="$t('seconds')"
                       :rules="[rules.minSec]"
                       :mask="numberMask"
                     ></v-text-field>
@@ -54,9 +54,8 @@
                   <v-flex xs12 sm6 md6>
                     <v-text-field
                       ref="delay"
-                      type="number"
                       v-model="editedItem.delay"
-                      label="Delay"
+                      :label="$t('delay')"
                       :rules="[rules.delay]"
                       :mask="numberMask"
                     ></v-text-field>
@@ -65,7 +64,7 @@
                     <v-text-field
                       ref="speed"
                       v-model="editedItem.speed"
-                      label="Speed"
+                      :label="$t('speed')"
                       :rules="[rules.required, rules.speed]"
                       :mask="numberMask"
                     ></v-text-field>
@@ -77,8 +76,8 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-            <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+            <v-btn color="blue darken-1" flat @click="close">{{ $t('cancel') }}</v-btn>
+            <v-btn color="blue darken-1" flat @click="save">{{ $t('save') }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -112,7 +111,7 @@
       </template>
 
       <template v-slot:no-data>
-        <div class="text-xs-center">No armies yet...</div>
+        <div class="text-xs-center">{{ $t('noArmies') }}</div>
       </template>
     </v-data-table>
   </div>
@@ -135,28 +134,6 @@ export default {
       snackText: '',
       counters: [],
       intervals: [],
-      headers: [
-        {
-          text: 'Actions',
-          sortable: false,
-          align: 'left'
-        },
-        {
-          text: 'Army Name',
-          align: 'left',
-          value: 'name',
-          sortable: false
-        },
-        { text: 'When to go', sortable: true, value: 'time' },
-        { text: 'Countdown', sortable: true, value: 'time' },
-        { text: 'Delay', value: 'delay' },
-        { text: '1x', sortable: false },
-        { text: '2x', sortable: false },
-        { text: '3x', sortable: false },
-        { text: '4x', sortable: false },
-        { text: '5x', sortable: false },
-        { text: '6x', sortable: false }
-      ],
 
       editedIndex: -1,
       editedItem: {
@@ -179,17 +156,18 @@ export default {
       numberMask: '##',
 
       rules: {
-        required: value => !!value || 'Required.',
-        number: value => typeof value === 'number' || 'Value must be a number',
-        counter: value => value.length <= 50 || 'Max 50 characters',
-        delay: value =>
-          (value > -60 && value < 60) || 'Delay must be from -59 to 59',
-        hours: value => !isNaN(value) || 'Hours must be number',
-        minSec: value => (value > -1 && value < 60) || 'Must be from 0 to 59',
-        speed: value => (value > 0 && value < 7) || 'Must be from 1 to 6'
+        required: value => !!value || this.$t('required'),
+        number: value =>
+          typeof value === 'number' || this.$t('valueMustBeANumber'),
+        counter: value => value.length <= 50 || this.$t('maxCharacters'),
+        delay: value => (value >= 0 && value < 60) || this.$t('delayMustBe'),
+        hours: value => !isNaN(value) || this.$t('valueMustBeANumber'),
+        minSec: value => (value > -1 && value < 60) || this.$t('minSecMustBe'),
+        speed: value => (value > 0 && value < 7) || this.$t('speedMustBe')
       }
     };
   },
+  mounted() {},
   methods: {
     getAttack() {
       if (this.store) {
@@ -204,14 +182,13 @@ export default {
     },
 
     editItem(item) {
-      this.editedItem = { ...item };
+      this.editedItem = { ...item, speed: 1 };
       this.dialog = true;
       this.editing = item.name;
     },
 
     deleteItem(item) {
-      confirm('Are you sure you want to delete this item?') &&
-        this.store.removeArmy(item);
+      confirm(this.$t('deleteConfirm')) && this.store.removeArmy(item);
     },
 
     close() {
@@ -314,7 +291,7 @@ export default {
   },
   computed: {
     formTitle() {
-      return this.editing ? 'Edit Army' : 'New Army';
+      return this.editing ? this.$t('editArmy') : this.$t('newArmy');
     },
     editableArmies() {
       let attack = this.getAttack();
@@ -327,15 +304,38 @@ export default {
     },
     secondsLeft() {
       return this.counters;
+    },
+    headers() {
+      return [
+        {
+          text: this.$t('actions'),
+          sortable: false,
+          align: 'left'
+        },
+        {
+          text: this.$t('armyName'),
+          align: 'left',
+          value: 'name',
+          sortable: false
+        },
+        { text: this.$t('whenToGo'), sortable: true, value: 'time' },
+        { text: this.$t('countdown'), sortable: true, value: 'time' },
+        { text: this.$t('delay'), value: 'delay' },
+        { text: '1x', sortable: false },
+        { text: '2x', sortable: false },
+        { text: '3x', sortable: false },
+        { text: '4x', sortable: false },
+        { text: '5x', sortable: false },
+        { text: '6x', sortable: false }
+      ];
     }
   },
   watch: {
     dialog(val) {
       val || this.close();
     },
-    editableArmies(val) {
+    editableArmies() {
       this.setCountDowns();
-      console.log(`army changed: ${val}`);
     }
   }
 };

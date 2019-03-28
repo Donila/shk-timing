@@ -65,7 +65,7 @@ const convertAttackToShort = (attack) => {
     a.n = attack.name;
   }
 
-  if (!isNaN(attack.time)) {
+  if (attack.time) {
     a.t = attack.time
   }
 
@@ -85,7 +85,7 @@ const convertAttackFromShort = (a) => {
     attack.name = a.n;
   }
 
-  if (!isNaN(a.t)) {
+  if (a.t) {
     attack.time = a.t
   }
 

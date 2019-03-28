@@ -3,8 +3,8 @@
     <div>
       <TimeX/>
       <ArmiesTable/>
-      <v-btn class="button" @click="addArmy()">Add Empty Army</v-btn>
-      <v-btn class="button success" @click="share()">Share Link</v-btn>
+      <v-btn class="button" @click="addArmy()">{{ $t('addRandomArmy') }}</v-btn>
+      <v-btn class="button success" @click="share()">{{ $t('shareLink') }}</v-btn>
     </div>
   </div>
 </template>
@@ -72,8 +72,7 @@ export default {
     this.setAttackFromUrl();
   },
   watch: {
-    $route(to, from) {
-      console.log(`from ${from.params.atk} to ${to.params.atk}`);
+    $route() {
       this.setAttackFromUrl();
     }
   }

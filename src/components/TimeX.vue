@@ -2,16 +2,16 @@
   <v-layout row>
     <v-flex xs4 sm1 md1>
       <v-card>
-        <v-card-text>Server Time: {{serverTime}}</v-card-text>
+        <v-card-text>{{ $t('serverTime') }}: {{serverTime}}</v-card-text>
       </v-card>
     </v-flex>
     <v-flex offset-xs4 xs4 offset-sm1 sm1 offset-md1 md1>
-      <label>Timing time</label>
-      <v-text-field outline box type="time" v-model="time" label="HH:MM" mask="time"></v-text-field>
+      <label>{{ $t('timingTime') }}</label>
+      <v-text-field outline box v-model="time" :label="$t('hhMM')" mask="time"></v-text-field>
     </v-flex>
     <v-flex offset-xs4 xs4 offset-sm1 sm1 offset-md1 md1>
       <v-card>
-        <v-card-text>Suggested Time: {{suggestedTime}}</v-card-text>
+        <v-card-text>{{ $t('suggestedTime') }} {{suggestedTime}}</v-card-text>
       </v-card>
     </v-flex>
   </v-layout>
@@ -19,6 +19,7 @@
 
 <script>
 import * as attackHelper from '@/helpers/attack';
+import * as timeHelper from '@/helpers/time';
 import moment from 'moment';
 
 export default {
@@ -40,6 +41,7 @@ export default {
         hhmm.minutes < 60
       ) {
         this.store.changeTime(this.time);
+        console.log('time saved');
       } else {
         console.log('time wrong');
       }
@@ -52,18 +54,25 @@ export default {
       return armies;
     },
     suggestedTime() {
-      return '00:00';
+      let slowestArmy = attackHelper.getSlowestArmy(this.store.state.armies);
+      let time = timeHelper.getSuggestedTime(slowestArmy, 3);
+      return time;
+    },
+    attackTime() {
+      return this.store.state.time;
     }
   },
   watch: {
-    time() {
-      this.saveTime();
+    time(newTime, oldTime) {
+      if (newTime !== oldTime) {
+        this.saveTime();
+      }
     },
-    armies() {
-      console.log('Armies changed from timeX');
+    attackTime() {
+      this.time = this.store.state.time;
     }
   },
-  created() {
+  mounted() {
     this.serverTime = moment.utc().format('HH:mm:ss');
     this.timer = setInterval(() => {
       this.serverTime = moment.utc().format('HH:mm:ss');

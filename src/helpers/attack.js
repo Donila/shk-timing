@@ -1,3 +1,5 @@
+import * as timeHelper from '@/helpers/time'
+
 const defaultArmy = () => ({
   speed: 1,
   delay: 0,
@@ -29,9 +31,22 @@ const convertTimeInput = (input) => {
   return { hours, minutes }
 }
 
+const getSlowestArmy = (armies) => {
+  if (armies.length === 0) {
+    return null
+  }
+
+  let slowestArmy = armies.reduce((accumulatedArmy, army) => {
+    return timeHelper.fullTime(army) > timeHelper.fullTime(accumulatedArmy) ? army : accumulatedArmy
+  }, armies[0]);
+
+  return slowestArmy;
+}
+
 export {
   defaultArmy,
   defaultAttack,
   emptyAttack,
-  convertTimeInput
+  convertTimeInput,
+  getSlowestArmy
 }

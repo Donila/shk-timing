@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 const secondsToDuration = (inputSeconds) => {
   if (!inputSeconds) {
     return '00:00:00'
@@ -14,10 +16,19 @@ const secondsToDuration = (inputSeconds) => {
 }
 
 const fullTime = (army) => {
+  if (!army) {
+    return 0
+  }
   return Math.floor(army.time / army.speed) + army.delay;
 };
 
+const getSuggestedTime = (army, minutesToPrepare) => {
+  let now = moment.utc();
+  return now.add(fullTime(army), 'seconds').add(minutesToPrepare, 'minutes').seconds(0).format('HH:mm')
+}
+
 export {
   secondsToDuration,
-  fullTime
+  fullTime,
+  getSuggestedTime
 }
