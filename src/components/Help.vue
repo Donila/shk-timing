@@ -17,7 +17,7 @@
 
       <v-container>
         <v-stepper v-model="helpStep" vertical>
-          <v-stepper-step :complete="helpStep > 1" step="1">{{ steps[0].title }}</v-stepper-step>
+          <v-stepper-step :complete="helpStep > 1" step="1">{{ $t('step1Title') }}</v-stepper-step>
 
           <v-stepper-content step="1">
             <v-card>
@@ -29,16 +29,16 @@
                 </v-flex>
                 <v-flex xs7>
                   <v-card-title>
-                    <div class="headline">{{ steps[0].title }}</div>
+                    <div class="headline">{{ $t('step1Title') }}</div>
                   </v-card-title>
-                  <v-card-text>{{ steps[0].text }}</v-card-text>
+                  <v-card-text>{{ $t('step1Text') }}</v-card-text>
                 </v-flex>
               </v-layout>
             </v-card>
             <v-btn color="primary" @click="helpStep = 2">{{ $t('continue') }}</v-btn>
           </v-stepper-content>
 
-          <v-stepper-step :complete="helpStep > 2" step="2">{{ steps[1].title }}</v-stepper-step>
+          <v-stepper-step :complete="helpStep > 2" step="2">{{ $t('step2Title') }}</v-stepper-step>
           <v-stepper-content step="2">
             <v-card>
               <v-layout>
@@ -49,9 +49,9 @@
                 </v-flex>
                 <v-flex xs7>
                   <v-card-title>
-                    <div class="headline">{{ steps[1].title }}</div>
+                    <div class="headline">{{ $t('step2Title') }}</div>
                   </v-card-title>
-                  <v-card-text>{{ steps[1].text }}</v-card-text>
+                  <v-card-text>{{ $t('step2Text') }}</v-card-text>
                 </v-flex>
               </v-layout>
             </v-card>
@@ -59,7 +59,7 @@
             <v-btn flat @click="helpStep = 1">{{ $t('cancel') }}</v-btn>
           </v-stepper-content>
 
-          <v-stepper-step :complete="helpStep > 3" step="3">{{ steps[2].title }}</v-stepper-step>
+          <v-stepper-step :complete="helpStep > 3" step="3">{{ $t('step3Title') }}</v-stepper-step>
           <v-stepper-content step="3">
             <v-card>
               <v-layout>
@@ -70,9 +70,9 @@
                 </v-flex>
                 <v-flex xs7>
                   <v-card-title>
-                    <div class="headline">{{ steps[2].title }}</div>
+                    <div class="headline">{{ $t('step3Title') }}</div>
                   </v-card-title>
-                  <v-card-text>{{ steps[2].text }}</v-card-text>
+                  <v-card-text>{{ $t('step3Text') }}</v-card-text>
                 </v-flex>
               </v-layout>
             </v-card>
@@ -92,20 +92,14 @@ export default {
       steps: [
         {
           number: 1,
-          title: this.$t('step1Title'),
-          text: this.$t('step1Text'),
           url: require('../assets/timing-time.png')
         },
         {
           number: 2,
-          title: this.$t('step2Title'),
-          text: this.$t('step2Text'),
           url: require('../assets/timed_attack.jpg')
         },
         {
           number: 3,
-          title: this.$t('step3Title'),
-          text: this.$t('step3Text'),
           url: require('../assets/perfect-timing.jpg')
         }
       ],
