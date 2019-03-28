@@ -1,15 +1,15 @@
 <template>
   <v-layout row>
-    <v-flex xs4 sm1 md1>
+    <v-flex xs4 sm1 md1 px-1>
       <v-card>
         <v-card-text>{{ $t('serverTime') }}: {{serverTime}}</v-card-text>
       </v-card>
     </v-flex>
-    <v-flex offset-xs4 xs4 offset-sm1 sm1 offset-md1 md1>
+    <v-flex xs4 offset-sm1 sm1 offset-md1 md1 px-1>
       <label>{{ $t('timingTime') }}</label>
       <v-text-field outline box v-model="time" :label="$t('hhMM')" mask="time"></v-text-field>
     </v-flex>
-    <v-flex offset-xs4 xs4 offset-sm1 sm1 offset-md1 md1>
+    <v-flex xs4 offset-sm1 sm1 offset-md1 md1 px-1>
       <v-card>
         <v-card-text>{{ $t('suggestedTime') }} {{suggestedTime}}</v-card-text>
       </v-card>

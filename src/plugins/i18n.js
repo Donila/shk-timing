@@ -6,6 +6,7 @@ Vue.use(VueI18n);
 const messages = {
   'en': {
     title: 'Tool for timing attacks in Stronghold Kingdoms',
+    titleShort: 'SHK Timing',
     serverTime: 'Server Time',
     timingTime: 'Timing time',
     hhMM: 'HH:MM',
@@ -50,6 +51,7 @@ const messages = {
   },
   'ru': {
     title: 'Приблуда для тайминга аттак в Stronghold Kingdoms',
+    titleShort: 'SHK Тайминг',
     serverTime: 'Серверное Время',
     timingTime: 'Время Атаки',
     hhMM: 'ЧЧ:ММ',
@@ -93,6 +95,7 @@ const messages = {
   },
   'pl': {
     title: 'Atak czasowy w Stronghold Kingdoms',
+    titleShort: 'SHK Timing',
     serverTime: 'Czas Serwera',
     timingTime: 'Czas Ataku',
     hhMM: 'GG:MM',

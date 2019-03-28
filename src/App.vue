@@ -2,7 +2,8 @@
   <div>
     <v-app dark>
       <v-toolbar fixed app>
-        <v-toolbar-title>{{ $t("title") }}</v-toolbar-title>
+        <v-toolbar-title class="hidden-md-and-down">{{ $t("title") }}</v-toolbar-title>
+        <v-toolbar-title class="hidden-lg-and-up">{{ $t("titleShort") }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-sm-and-down">
           <Languages/>
