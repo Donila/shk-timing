@@ -77,3 +77,13 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+@media (max-width: 968px) {
+  .container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+</style>
+

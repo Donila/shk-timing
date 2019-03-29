@@ -3,7 +3,12 @@
     <v-toolbar flat color="dark">
       <v-toolbar-title>{{ $t('armiesTable') }}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-dialog v-model="dialog" max-width="500px" persistent>
+      <v-dialog
+        v-model="dialog"
+        max-width="500px"
+        persistent
+        :fullscreen="$vuetify.breakpoint.xsOnly"
+      >
         <template v-slot:activator="{ on }">
           <v-btn color="primary" dark class="mb-2" v-on="on">{{ $t('newArmy') }}</v-btn>
         </template>

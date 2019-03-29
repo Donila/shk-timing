@@ -115,3 +115,12 @@ export default {
   methods: {}
 };
 </script>
+
+<style scoped>
+@media (max-width: 968px) {
+  .container, .v-stepper__content {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+</style>
