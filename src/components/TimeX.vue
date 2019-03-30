@@ -1,15 +1,16 @@
 <template>
-  <v-layout row>
-    <v-flex xs4 sm1 md1 px-1>
+  <v-layout :row="$vuetify.breakpoint.mdAndUp" :column="$vuetify.breakpoint.smAndDown">
+    <v-flex xs12 sm2 md2 px-1>
       <v-card>
         <v-card-text>{{ $t('serverTime') }}: {{serverTime}}</v-card-text>
       </v-card>
     </v-flex>
-    <v-flex xs4 offset-sm1 sm1 offset-md1 md1 px-1>
+    <v-flex xs12 offset-sm1 sm6 offset-md1 md4 px-1 mb-2>
       <label>{{ $t('timingTime') }}</label>
-      <v-text-field outline box v-model="time" :label="$t('hhMM')" mask="time"></v-text-field>
+      <!--<v-text-field outline box v-model="time" :label="$t('hhMM')" mask="time"></v-text-field>-->
+      <v-time-picker v-model="clockTime" format="24hr" :landscape="$vuetify.breakpoint.mdAndUp"></v-time-picker>
     </v-flex>
-    <v-flex xs4 offset-sm1 sm1 offset-md1 md1 px-1>
+    <v-flex xs12 offset-sm1 sm2 offset-md1 md2 px-1>
       <v-card>
         <v-card-text>{{ $t('suggestedTime') }} {{suggestedTime}}</v-card-text>
       </v-card>
@@ -28,7 +29,8 @@ export default {
       store: this.$root.$data,
       time: '0000',
       serverTime: null,
-      timer: null
+      timer: null,
+      clockTime: null
     };
   },
   methods: {
@@ -70,6 +72,9 @@ export default {
     },
     attackTime() {
       this.time = this.store.state.time;
+    },
+    clockTime() {
+      this.time = this.clockTime.replace(':', '');
     }
   },
   mounted() {
