@@ -6,7 +6,7 @@
       </v-card>
     </v-flex>
     <v-flex xs12 offset-sm1 sm6 offset-md1 md4 px-1 mb-2>
-      <label>{{ $t('timingTime') }}</label>
+      <div>{{ $t('timingTime') }}</div>
       <!--<v-text-field outline box v-model="time" :label="$t('hhMM')" mask="time"></v-text-field>-->
       <v-time-picker v-model="clockTime" format="24hr" :landscape="$vuetify.breakpoint.mdAndUp"></v-time-picker>
     </v-flex>
