@@ -48,6 +48,7 @@ const messages = {
     To do so, we calculated "Suggested Time" for you. It takes your slowest army(which would be launched first), add it's time to current time and also adds 3 additional minutes so you can prepare. If you set that time into "Attack Time", you will see your closest countdown must be around 3 minutes. But feel free to adjust and play with Attack Time as you wish`,
     step3Title: 'Launch your armies!',
     step3Text: 'When you set up your "Attack Time", you will notice the "Countdown" field in the table starts counting. It a timer when you should launch your army. There is also a column called "When To Go". Its exact server time that you need to use in-game for launching your army. We personally recommend to use that instead of countdown. Countdown is just for you to know approximately when to go (Its a separate theme, sometimes this clock might have gap in 1-2s). We also recommend to make a delays with 5-6 seconds between your army-types.',
+    fromDiscordBot: 'From Discord Bot',
   },
   'ru': {
     title: 'Приблуда для тайминга аттак в Stronghold Kingdoms',
@@ -92,6 +93,7 @@ const messages = {
     Когда закончите добавлять армии, поиграйтесь со скоростями в табличке, посортируйте по времени и по задержке и посмотрите все ли верно. Чтобы выбрать правильное время атаки, мы сделали для вас "Оптимальное Время". Мы берем время вашей самой медленной армии (которая будет выходить самой первой) добавляем к настоящему времени и еще +3 минуты, чтобы вы успели приготовиться. Поставьте это время во "Время Атаки" и в табличке заметите что ваша самая медленная армия будет в районе 3-ех минут до выхода. Вы можете сортировать табличку по времени выхода армий (колонки Время выхода и Отсчет сортируют одинаково) и по времени их захода в цель (по Задержке)`,
     step3Title: 'Запускайте Армейки!',
     step3Text: 'Когда вы установите "Время Атаки", вы должны заметить идущие таймеры в колонке "Отсчет". Это таймер до выпуска армейки. Колонка "Когда Выходить" показывает именно то серверное время когда вам надо ее отправить. И именно это время надо использовать когда вы уже на "кнопке" и видите в диалоговом окне время в игре. Отсчет просто показывает сколько осталось до выхода (Это отдельная тема, но смысл в том что если вы оставите окно браузера открытым на долгое время, эти часы на сайте могут врать на 1-2 секунды за час работы таймера. "Время Выхода" не соврет никогда). Также я рекомендую держать задержку на уровне 5 секунд между разными типами армеек, чтобы был запас на различные зависания в мобильной версии игры.',
+    fromDiscordBot: 'Из Дискорд Бота',
   },
   'pl': {
     title: 'Atak czasowy w Stronghold Kingdoms',
@@ -134,7 +136,8 @@ const messages = {
     step2Title: 'Ustaw czas ataku',
     step2Text: 'Gdy skończysz wypełniać swoje armie, zastanów się, jakie karty prędkości musisz użyć i kliknij na czas w tabeli pod kolumnami 1x-6x. Następnie musisz wybrać odpowiedni „Czas Ataku”, gdy wszystkie te armie uderzą w twojego wroga w tym samym momencie. Aby to zrobić, obliczyliśmy dla Ciebie „Sugerowany czas”. Potrzeba twojej najwolniejszej armii (która zostanie uruchomiona jako pierwsza), dodaj jej czas do aktualnego czasu i dodaje 3 dodatkowe minuty, abyś mógł się przygotować. Jeśli ustawisz ten czas na „Czas ataku”, zobaczysz, że najbliższe odliczanie musi wynosić około 3 minut. Ale dostosuj się i baw się czasem ataku, jak chcesz',
     step3Title: 'Uruchom swoje armie!',
-    step3Text: 'Po skonfigurowaniu „Czasu ataku” zauważysz, że pole „Odliczanie” w tabeli zaczyna się liczyć. To zegar, kiedy powinieneś uruchomić swoją armię. Istnieje również kolumna „Kiedy iść”. Dokładny czas serwera, którego potrzebujesz do użycia w grze do uruchomienia swojej armii. Osobiście zalecamy używanie tego zamiast odliczania. Odliczanie jest tylko dla Ciebie, aby wiedzieć, kiedy w przybliżeniu iść (jest to osobny motyw, czasami ten zegar może mieć przerwę w 1-2s). Zalecamy również opóźnienie z 5-6 sekundami między twoimi typami armii.'
+    step3Text: 'Po skonfigurowaniu „Czasu ataku” zauważysz, że pole „Odliczanie” w tabeli zaczyna się liczyć. To zegar, kiedy powinieneś uruchomić swoją armię. Istnieje również kolumna „Kiedy iść”. Dokładny czas serwera, którego potrzebujesz do użycia w grze do uruchomienia swojej armii. Osobiście zalecamy używanie tego zamiast odliczania. Odliczanie jest tylko dla Ciebie, aby wiedzieć, kiedy w przybliżeniu iść (jest to osobny motyw, czasami ten zegar może mieć przerwę w 1-2s). Zalecamy również opóźnienie z 5-6 sekundami między twoimi typami armii.',
+    fromDiscordBot: 'From Discord Bot',
   }
 };
 

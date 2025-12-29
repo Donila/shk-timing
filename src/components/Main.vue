@@ -5,6 +5,31 @@
       <ArmiesTable/>
       <v-btn class="button" @click="addArmy()">{{ $t('addRandomArmy') }}</v-btn>
       <v-btn class="button success" @click="share()">{{ $t('shareLink') }}</v-btn>
+      <v-dialog
+        v-model="dialog"
+        max-width="1200px"
+        persistent
+        :fullscreen="$vuetify.breakpoint.xsOnly"
+      >
+        <template v-slot:activator="{ on }">
+          <v-btn class="button info" v-on="on">{{ $t('fromDiscordBot') }}</v-btn>
+        </template>
+        <v-card>
+          <v-container grid-list-md>
+            <v-card-text>Paste exact message from bot</v-card-text>
+            <v-textarea
+              v-model="pastedFromBot"
+              :label="$t('discordBotMessage')"
+            ></v-textarea>
+          </v-container>
+          
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn class="button" @click="fromDiscordBot()">{{ $t('save') }}</v-btn>
+            <v-btn color="blue darken-1" flat @click="dialog = false;">{{ $t('cancel') }}</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
   </div>
 </template>
@@ -12,6 +37,7 @@
 <script>
 import * as urlConverter from '@/helpers/urlConverter';
 import * as attackHelper from '@/helpers/attack';
+import * as discordParserHelper from '@/helpers/discordBotArmiesParser';
 
 import ArmiesTable from '@/components/ArmiesTable';
 import TimeX from '@/components/TimeX';
@@ -24,7 +50,9 @@ export default {
   },
   data() {
     return {
-      store: this.$root.$data
+      store: this.$root.$data,
+      pastedFromBot: '',
+      dialog: false,
     };
   },
   methods: {
@@ -66,6 +94,24 @@ export default {
       el.select();
       document.execCommand('copy');
       document.body.removeChild(el);
+    },
+    fromDiscordBot() {
+      this.store.newAttack();
+      try {
+        const armies = discordParserHelper.convertFromDiscordBot(this.pastedFromBot);
+
+        if (armies.length) {
+          
+          armies.forEach(army => {
+            this.store.addArmy(army);
+          });
+        }
+        // eslint-disable-next-line no-empty
+      } catch (e) {
+        console.log(e);
+      }
+      this.pastedFromBot = '';
+      this.dialog = false;
     }
   },
   mounted() {
