@@ -12,14 +12,15 @@
         :fullscreen="$vuetify.breakpoint.xsOnly"
       >
         <template v-slot:activator="{ on }">
-          <v-btn class="button info" v-on="on">{{ $t('fromDiscordBot') }}</v-btn>
+          <v-btn class="button info" v-on="on">
+            <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="discord" style="width: 30px;">
+          </v-btn>
         </template>
         <v-card>
           <v-container grid-list-md>
-            <v-card-text>Paste exact message from bot</v-card-text>
             <v-textarea
               v-model="pastedFromBot"
-              :label="$t('discordBotMessage')"
+              label="???"
             ></v-textarea>
           </v-container>
           
