@@ -1,7 +1,7 @@
 const parseDurationToSeconds = (durationString) => {
   let totalSeconds = 0;
   // Regex to capture digits followed by 'h', 'm', or 's'
-  const regex = /(\d+)\s*(h|m|s)/g;
+  const regex = /(\d+)\s*(d|h|m|s)/g;
   let matches;
 
   // Iterate over all matches in the string
@@ -47,6 +47,6 @@ const convertFromDiscordBot = (str) => {
   return [];
 }
 
-export { 
+export {
   convertFromDiscordBot
 }
