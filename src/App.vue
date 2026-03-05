@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-app>
-      <v-navigation-drawer v-model="drawer" location="right" app>
+      <v-navigation-drawer v-if="authStore.isAuth" v-model="drawer" location="right" app>
         <v-list dense>
           <v-list-item @click="home()">
             <template v-slot:prepend>
@@ -25,17 +25,24 @@
               <Help/>
             </v-list-item-title>
           </v-list-item>
+          <v-list-item @click="logout()">
+            <template v-slot:prepend>
+              <v-icon>mdi-logout</v-icon>
+            </template>
+            <v-list-item-title>{{ $t('logout') }}</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-navigation-drawer>
       <v-app-bar app>
-        <v-app-bar-nav-icon class="d-lg-none" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon v-if="authStore.isAuth" class="d-lg-none" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title class="d-none d-lg-flex">{{ $t("title") }}</v-toolbar-title>
         <v-toolbar-title class="d-lg-none">{{ $t("titleShort") }}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <div class="d-none d-md-flex">
+        <div v-if="authStore.isAuth" class="d-none d-md-flex">
           <Languages/>
           <v-btn variant="text" @click="home()">{{ $t('newAttack') }}</v-btn>
           <Help/>
+          <v-btn variant="text" @click="logout()">{{ $t('logout') }}</v-btn>
         </div>
       </v-app-bar>
       <v-main>
@@ -52,6 +59,7 @@
 import Help from '@/components/Help.vue'
 import Languages from '@/components/Languages.vue'
 import { useAttackStore } from '@/stores/attackStore'
+import { useAuthStore } from '@/stores/authStore'
 
 export default {
   components: {
@@ -61,7 +69,8 @@ export default {
   data() {
     return {
       drawer: false,
-      store: useAttackStore()
+      store: useAttackStore(),
+      authStore: useAuthStore()
     }
   },
   methods: {
@@ -71,6 +80,10 @@ export default {
     },
     about() {
       this.$router.push({ name: 'about' })
+    },
+    logout() {
+      this.authStore.logout()
+      this.$router.push('/login')
     }
   }
 }
