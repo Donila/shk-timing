@@ -3,8 +3,9 @@
     <div>
       <TimeX/>
       <ArmiesTable/>
-      <v-btn class="button" @click="addArmy()">{{ $t('addRandomArmy') }}</v-btn>
-      <v-btn class="button success" @click="share()">{{ $t('shareLink') }}</v-btn>
+      <div class="mt-3 d-flex ga-2">
+      <v-btn @click="addArmy()">{{ $t('addRandomArmy') }}</v-btn>
+      <v-btn color="success" @click="share()">{{ $t('shareLink') }}</v-btn>
       <v-dialog
         v-model="dialog"
         max-width="1200px"
@@ -12,7 +13,7 @@
         :fullscreen="$vuetify.display.xs"
       >
         <template v-slot:activator="{ props }">
-          <v-btn class="button info" v-bind="props">
+          <v-btn color="info" v-bind="props">
             <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="discord" style="width: 30px;">
           </v-btn>
         </template>
@@ -31,6 +32,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      </div>
     </div>
   </div>
 </template>
