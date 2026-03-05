@@ -272,8 +272,11 @@ export default {
     editableArmies() {
       let attack = this.getAttack()
       if (attack) {
-        let editable = attack.armies.map(armyHelper.toEditableModel)
-        return editable
+        return attack.armies.map(army => ({
+          ...armyHelper.toEditableModel(army),
+          whenToGo: armyHelper.whenToGo(army, this.store.time).valueOf(),
+          countdown: armyHelper.whenToGoCounter(army, this.store.time)
+        }))
       } else {
         return []
       }
@@ -293,10 +296,10 @@ export default {
           title: this.$t('armyName'),
           align: 'start',
           key: 'name',
-          sortable: false
+          sortable: true,
         },
-        { title: this.$t('whenToGo'), key: 'whenToGo', sortable: false },
-        { title: this.$t('countdown'), key: 'countdown', sortable: false },
+        { title: this.$t('whenToGo'), key: 'whenToGo', sortable: true },
+        { title: this.$t('countdown'), key: 'countdown', sortable: true },
         { title: this.$t('delay'), key: 'delay', sortable: true },
         { title: '1x', key: 'x1', sortable: false },
         { title: '2x', key: 'x2', sortable: false },
