@@ -6,8 +6,27 @@
       </v-card>
     </v-col>
     <v-col cols="12" offset-sm="1" sm="6" offset-md="1" md="4" class="px-1 mb-2">
-      <div>{{ $t('timingTime') }}</div>
-      <v-time-picker v-model="clockTime" format="24hr" :landscape="$vuetify.display.mdAndUp"></v-time-picker>
+      <v-dialog v-model="dialog" width="auto">
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-text-field
+            v-model="clockTime"
+            :label="$t('timingTime')"
+            prepend-icon="mdi-clock-time-four-outline"
+            readonly
+            v-bind="activatorProps"
+          ></v-text-field>
+        </template>
+        <v-time-picker
+          v-if="dialog"
+          v-model="pendingTime"
+          format="24hr"
+        >
+          <template v-slot:actions>
+            <v-btn variant="text" color="primary" @click="dialog = false">{{ $t('cancel') }}</v-btn>
+            <v-btn variant="text" color="primary" @click="confirmTime">{{ $t('save') }}</v-btn>
+          </template>
+        </v-time-picker>
+      </v-dialog>
     </v-col>
     <v-col cols="12" offset-sm="1" sm="2" offset-md="1" md="2" class="px-1">
       <v-card>
@@ -30,7 +49,9 @@ export default {
       time: '0000',
       serverTime: null,
       timer: null,
-      clockTime: null
+      clockTime: null,
+      dialog: false,
+      pendingTime: null
     }
   },
   methods: {
@@ -47,6 +68,10 @@ export default {
       } else {
         console.log('time wrong')
       }
+    },
+    confirmTime() {
+      this.clockTime = this.pendingTime
+      this.dialog = false
     }
   },
   computed: {
@@ -63,6 +88,11 @@ export default {
     }
   },
   watch: {
+    dialog(val) {
+      if (val) {
+        this.pendingTime = this.clockTime
+      }
+    },
     time(newTime, oldTime) {
       if (newTime !== oldTime) {
         this.saveTime()
@@ -71,8 +101,10 @@ export default {
     attackTime() {
       this.time = this.store.time
     },
-    clockTime() {
-      this.time = this.clockTime.replace(':', '')
+    clockTime(val) {
+      if (val) {
+        this.time = val.replace(':', '')
+      }
     }
   },
   mounted() {
@@ -88,10 +120,4 @@ export default {
 </script>
 
 <style scoped>
-  .clock-separator {
-    font-weight: bold;
-    font-size: 2em;
-    margin-left: 0.2em;
-    margin-right: 0.2em;
-  }
 </style>

@@ -4,7 +4,6 @@
       <TimeX/>
       <ArmiesTable/>
       <div class="mt-3 d-flex ga-2">
-      <v-btn @click="addArmy()">{{ $t('addRandomArmy') }}</v-btn>
       <v-btn color="success" @click="share()">{{ $t('shareLink') }}</v-btn>
       <v-dialog
         v-model="dialog"
@@ -76,20 +75,9 @@ export default {
         this.setAttack(attackHelper.emptyAttack())
       }
     },
-    addArmy() {
-      this.store.addArmy({
-        name: `Army ${Math.random()}`,
-        time: 3600,
-        delay: this.random(0, 15),
-        speed: this.random(1, 6)
-      })
-    },
     share() {
       let atk = urlConverter.convertAttackToUrl(this.getAttack())
       this.$router.push({ name: 'attack', params: { atk } })
-    },
-    random(min, max) {
-      return Math.floor(Math.random() * max) + min
     },
     copyToClipboard(str) {
       const el = document.createElement('textarea')

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar flat color="surface-variant">
+    <v-toolbar>
       <v-toolbar-title>{{ $t('armiesTable') }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-dialog
@@ -10,7 +10,7 @@
         :fullscreen="$vuetify.display.xs"
       >
         <template v-slot:activator="{ props }">
-          <v-btn color="primary" dark class="mb-2" v-bind="props">{{ $t('newArmy') }}</v-btn>
+          <v-btn color="light-blue-accent-4" variant="flat" class="mb-2" v-bind="props">{{ $t('newArmy') }}</v-btn>
         </template>
         <v-card>
           <v-card-title>
