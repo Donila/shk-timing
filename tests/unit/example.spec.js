@@ -1,13 +1,5 @@
-// import { expect } from 'chai'
-// import { shallowMount } from '@vue/test-utils'
-// import Main from '@/components/HelloWorld.vue'
-
-// describe('HelloWorld.vue', () => {
-//   it('renders props.msg when passed', () => {
-//     const msg = 'new message'
-//     const wrapper = shallowMount(HelloWorld, {
-//       propsData: { msg }
-//     })
-//     expect(wrapper.text()).to.include(msg)
-//   })
-// })
+// Placeholder — component tests require a full Vue mount setup.
+// Unit tests for helpers live in helpers.spec.js.
+describe('placeholder', () => {
+  it('passes', () => {})
+})

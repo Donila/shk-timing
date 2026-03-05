@@ -1,20 +1,21 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
-import Vuetify from 'vuetify';
-import '@mdi/font/css/materialdesignicons.css';
-import 'vuetify/dist/vuetify.min.css'
 import i18n from '@/plugins/i18n'
+import { createPinia } from 'pinia'
+import { createVuetify } from 'vuetify'
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import 'vuetify/styles'
+import '@mdi/font/css/materialdesignicons.css'
 
-Vue.use(Vuetify);
+const vuetify = createVuetify({
+  icons: { defaultSet: 'mdi', aliases, sets: { mdi } },
+  theme: { defaultTheme: 'dark' }
+})
 
-Vue.config.productionTip = false
-
-new Vue({
-  router,
-  data: store,
-  iconfont: 'mdi',
-  i18n: i18n,
-  render: h => h(App)
-}).$mount('#app')
+const app = createApp(App)
+app.use(createPinia())
+app.use(router)
+app.use(i18n)
+app.use(vuetify)
+app.mount('#app')

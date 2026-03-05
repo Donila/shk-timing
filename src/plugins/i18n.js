@@ -1,7 +1,4 @@
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
-
-Vue.use(VueI18n);
+import { createI18n } from 'vue-i18n'
 
 const messages = {
   'en': {
@@ -132,19 +129,18 @@ const messages = {
     save: 'Zapisz',
     continue: 'Dalej',
     step1Title: 'Dodaj swoje Armie',
-    step1Text: 'Najpierw musisz wybrać cel. Następnie wybierz swoją armię i sprawdź czas na cel. Kliknij przycisk „Nowa armia” i wypełnij wymagane dane: (1) Nazwa armii - nazwij swoją armię, abyś nie zapomniał. (2) Godziny, minuty i sekundy są oczywiste. (3) Opóźnienie - to kilka sekund, z którymi będziesz pracował, aby zamówić atak. To opóźnienie jest dodawane do twojego czasu ataku. Na przykład masz „Cleaner Army”, „Breaker Army” i „Captain Army”. I chcesz, żeby twoje „Czystsze wojsko” uderzyło przed „Armią Łamacza”, a twoja „Armia Kapitana” powinna być ostatnią, która trafi w cel. Musisz ustawić Opóźnienie „Czystszej Armii” na 0 (uderzy dokładnie w „Czasie Ataku”), Opóźnienie „Armii Łamacza” na 5 (uderzy w 5 sekund) i „Opóźnienie Armii Kapitana na 10 (będzie za 10 sekund). Pamiętaj, że będziesz w stanie sortować armie według opóźnień i edytować je później, jeśli zajdzie taka potrzeba. (4) Szybkość - to pole jest tylko wtedy, gdy zagrałeś kartę Dyscypliny lub Logistyki i nie możesz zobaczyć swojego 1x czasu. Ponownie obliczymy Twój czas poprawnie. Np .: dodajesz 1h armii z 2 prędkościami, przeliczymy 1x raz na 2h, a także wszystkie 3x 4x 5x, a nawet 6x. Kiedy ok, naciśnij przycisk Zapisz i wróć do następnego kroku w samouczku.',
+    step1Text: 'Najpierw musisz wybrać cel. Następnie wybierz swoją armię i sprawdź czas na cel. Kliknij przycisk „Nowa armia" i wypełnij wymagane dane: (1) Nazwa armii - nazwij swoją armię, abyś nie zapomniał. (2) Godziny, minuty i sekundy są oczywiste. (3) Opóźnienie - to kilka sekund, z którymi będziesz pracował, aby zamówić atak. To opóźnienie jest dodawane do twojego czasu ataku. Na przykład masz „Cleaner Army", „Breaker Army" i „Captain Army". I chcesz, żeby twoje „Czystsze wojsko" uderzyło przed „Armią Łamacza", a twoja „Armia Kapitana" powinna być ostatnią, która trafi w cel. Musisz ustawić Opóźnienie „Czystszej Armii" na 0 (uderzy dokładnie w „Czasie Ataku"), Opóźnienie „Armii Łamacza" na 5 (uderzy w 5 sekund) i „Opóźnienie Armii Kapitana na 10 (będzie za 10 sekund). Pamiętaj, że będziesz w stanie sortować armie według opóźnień i edytować je później, jeśli zajdzie taka potrzeba. (4) Szybkość - to pole jest tylko wtedy, gdy zagrałeś kartę Dyscypliny lub Logistyki i nie możesz zobaczyć swojego 1x czasu. Ponownie obliczymy Twój czas poprawnie. Np .: dodajesz 1h armii z 2 prędkościami, przeliczymy 1x raz na 2h, a także wszystkie 3x 4x 5x, a nawet 6x. Kiedy ok, naciśnij przycisk Zapisz i wróć do następnego kroku w samouczku.',
     step2Title: 'Ustaw czas ataku',
-    step2Text: 'Gdy skończysz wypełniać swoje armie, zastanów się, jakie karty prędkości musisz użyć i kliknij na czas w tabeli pod kolumnami 1x-6x. Następnie musisz wybrać odpowiedni „Czas Ataku”, gdy wszystkie te armie uderzą w twojego wroga w tym samym momencie. Aby to zrobić, obliczyliśmy dla Ciebie „Sugerowany czas”. Potrzeba twojej najwolniejszej armii (która zostanie uruchomiona jako pierwsza), dodaj jej czas do aktualnego czasu i dodaje 3 dodatkowe minuty, abyś mógł się przygotować. Jeśli ustawisz ten czas na „Czas ataku”, zobaczysz, że najbliższe odliczanie musi wynosić około 3 minut. Ale dostosuj się i baw się czasem ataku, jak chcesz',
+    step2Text: 'Gdy skończysz wypełniać swoje armie, zastanów się, jakie karty prędkości musisz użyć i kliknij na czas w tabeli pod kolumnami 1x-6x. Następnie musisz wybrać odpowiedni „Czas Ataku", gdy wszystkie te armie uderzą w twojego wroga w tym samym momencie. Aby to zrobić, obliczyliśmy dla Ciebie „Sugerowany czas". Potrzeba twojej najwolniejszej armii (która zostanie uruchomiona jako pierwsza), dodaj jej czas do aktualnego czasu i dodaje 3 dodatkowe minuty, abyś mógł się przygotować. Jeśli ustawisz ten czas na „Czas ataku", zobaczysz, że najbliższe odliczanie musi wynosić około 3 minut. Ale dostosuj się i baw się czasem ataku, jak chcesz',
     step3Title: 'Uruchom swoje armie!',
-    step3Text: 'Po skonfigurowaniu „Czasu ataku” zauważysz, że pole „Odliczanie” w tabeli zaczyna się liczyć. To zegar, kiedy powinieneś uruchomić swoją armię. Istnieje również kolumna „Kiedy iść”. Dokładny czas serwera, którego potrzebujesz do użycia w grze do uruchomienia swojej armii. Osobiście zalecamy używanie tego zamiast odliczania. Odliczanie jest tylko dla Ciebie, aby wiedzieć, kiedy w przybliżeniu iść (jest to osobny motyw, czasami ten zegar może mieć przerwę w 1-2s). Zalecamy również opóźnienie z 5-6 sekundami między twoimi typami armii.',
+    step3Text: 'Po skonfigurowaniu „Czasu ataku" zauważysz, że pole „Odliczanie" w tabeli zaczyna się liczyć. To zegar, kiedy powinieneś uruchomić swoją armię. Istnieje również kolumna „Kiedy iść". Dokładny czas serwera, którego potrzebujesz do użycia w grze do uruchomienia swojej armii. Osobiście zalecamy używanie tego zamiast odliczania. Odliczanie jest tylko dla Ciebie, aby wiedzieć, kiedy w przybliżeniu iść (jest to osobny motyw, czasami ten zegar może mieć przerwę w 1-2s). Zalecamy również opóźnienie z 5-6 sekundami między twoimi typami armii.',
     fromDiscordBot: 'From Discord Bot',
   }
-};
+}
 
-const i18n = new VueI18n({
+export default createI18n({
+  legacy: false,
   locale: 'ru',
   fallbackLocale: 'en',
   messages,
-});
-
-export default i18n
+})

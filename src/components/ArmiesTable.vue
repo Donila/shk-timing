@@ -1,16 +1,16 @@
 <template>
   <div>
-    <v-toolbar flat color="dark">
+    <v-toolbar>
       <v-toolbar-title>{{ $t('armiesTable') }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-dialog
         v-model="dialog"
         max-width="500px"
         persistent
-        :fullscreen="$vuetify.breakpoint.xsOnly"
+        :fullscreen="$vuetify.display.xs"
       >
-        <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark class="mb-2" v-on="on">{{ $t('newArmy') }}</v-btn>
+        <template v-slot:activator="{ props }">
+          <v-btn color="light-blue-accent-4" variant="flat" class="mb-2" v-bind="props">{{ $t('newArmy') }}</v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -19,70 +19,65 @@
 
           <v-card-text>
             <v-form ref="form">
-              <v-container grid-list-md>
-                <v-layout wrap>
-                  <v-flex xs12 sm12 md12>
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
                     <v-text-field
                       ref="name"
                       v-model="editedItem.name"
                       :label="$t('armyName')"
                       :rules="[rules.required, rules.counter]"
                     ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm4 md4>
+                  </v-col>
+                  <v-col cols="12" sm="4">
                     <v-text-field
                       ref="h"
                       v-model="editedItem.h"
                       :label="$t('hours')"
                       :rules="[rules.hours]"
-                      :mask="numberMask"
                     ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm4 md4>
+                  </v-col>
+                  <v-col cols="12" sm="4">
                     <v-text-field
                       ref="m"
                       v-model="editedItem.m"
                       :label="$t('minutes')"
                       :rules="[rules.minSec]"
-                      :mask="numberMask"
                     ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm4 md4>
+                  </v-col>
+                  <v-col cols="12" sm="4">
                     <v-text-field
                       ref="s"
                       v-model="editedItem.s"
                       :label="$t('seconds')"
                       :rules="[rules.minSec]"
-                      :mask="numberMask"
                     ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md6>
+                  </v-col>
+                  <v-col cols="12" sm="6">
                     <v-text-field
                       ref="delay"
                       v-model="editedItem.delay"
                       :label="$t('delay')"
                       :rules="[rules.delay]"
-                      :mask="numberMask"
                     ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md6>
+                  </v-col>
+                  <v-col cols="12" sm="6">
                     <v-text-field
                       ref="speed"
                       v-model="editedItem.speed"
                       :label="$t('speed')"
                       :rules="[rules.required, rules.speed]"
-                      :mask="numberMask"
                     ></v-text-field>
-                  </v-flex>
-                </v-layout>
+                  </v-col>
+                </v-row>
               </v-container>
             </v-form>
           </v-card-text>
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="close">{{ $t('cancel') }}</v-btn>
-            <v-btn color="blue darken-1" flat @click="save">{{ $t('save') }}</v-btn>
+            <v-btn color="blue-darken-1" variant="text" @click="close">{{ $t('cancel') }}</v-btn>
+            <v-btn color="blue-darken-1" variant="text" @click="save">{{ $t('save') }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -90,46 +85,46 @@
     <v-data-table
       :headers="headers"
       :items="editableArmies"
-      :custom-sort="customSort"
       class="elevation-2"
-      hide-actions
+      :items-per-page="-1"
+      hide-default-footer
     >
-      <template v-slot:items="props">
-        <td class="text-xs-left">
-          <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-          <v-icon small @click="deleteItem(props.item)">delete</v-icon>
-        </td>
-        <td>{{ props.item.name }}</td>
-        <td class="text-xs-left">{{ whenToGo(props.item) }}</td>
-        <td class="text-xs-left">{{ secondsToDuration(secondsLeft[props.item.name]) }}</td>
-
-        <td class="text-xs-left">{{ props.item.delay }}</td>
-        <td
-          v-for="(speed, index) in speeds"
-          :key="speed.value"
-          :class="{ 'indigo darken-4': props.item.speed - 1 == index }"
-        >
-          <a
-            @click="changeSpeed(props.item, speed.value)"
-          >{{ stringifyArmyTime(buildXTable(props.item)[index]) }}</a>
-        </td>
+      <template v-slot:item="{ item }">
+        <tr>
+          <td>
+            <v-icon size="small" class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+            <v-icon size="small" @click="deleteItem(item)">mdi-delete</v-icon>
+          </td>
+          <td>{{ item.name }}</td>
+          <td class="text-left">{{ whenToGo(item) }}</td>
+          <td class="text-left">{{ secondsToDuration(secondsLeft[item.name]) }}</td>
+          <td class="text-left">{{ item.delay }}</td>
+          <td
+            v-for="(speed, index) in speeds"
+            :key="speed.value"
+            :class="{ 'indigo-darken-4': item.speed - 1 == index }"
+          >
+            <a @click="changeSpeed(item, speed.value)">{{ stringifyArmyTime(buildXTable(item)[index]) }}</a>
+          </td>
+        </tr>
       </template>
 
       <template v-slot:no-data>
-        <div class="text-xs-center">{{ $t('noArmies') }}</div>
+        <div class="text-center">{{ $t('noArmies') }}</div>
       </template>
     </v-data-table>
   </div>
 </template>
 
 <script>
-import * as armyHelper from '@/helpers/army';
-import * as timeHelper from '@/helpers/time';
+import * as armyHelper from '@/helpers/army'
+import * as timeHelper from '@/helpers/time'
+import { useAttackStore } from '@/stores/attackStore'
 
 export default {
   data() {
     return {
-      store: this.$root.$data,
+      store: useAttackStore(),
       speeds: armyHelper.SPEEDS,
 
       dialog: false,
@@ -137,8 +132,8 @@ export default {
       snack: false,
       snackColor: '',
       snackText: '',
-      counters: [],
-      intervals: [],
+      counters: {},
+      intervals: {},
 
       editedIndex: -1,
       editedItem: {
@@ -158,8 +153,6 @@ export default {
         speed: 1
       },
 
-      numberMask: '##',
-
       rules: {
         required: value => !!value || this.$t('required'),
         number: value =>
@@ -170,39 +163,39 @@ export default {
         minSec: value => (value > -1 && value < 60) || this.$t('minSecMustBe'),
         speed: value => (value > 0 && value < 7) || this.$t('speedMustBe')
       }
-    };
+    }
   },
   mounted() {},
   methods: {
     getAttack() {
       if (this.store) {
-        return this.store.getState();
+        return this.store.getState()
       } else {
-        return null;
+        return null
       }
     },
 
     stringifyArmyTime(time) {
-      return armyHelper.stringifyArmyTime(time);
+      return armyHelper.stringifyArmyTime(time)
     },
 
     editItem(item) {
-      this.editedItem = { ...item, speed: 1 };
-      this.dialog = true;
-      this.editing = item.name;
+      this.editedItem = { ...item, speed: 1 }
+      this.dialog = true
+      this.editing = item.name
     },
 
     deleteItem(item) {
-      confirm(this.$t('deleteConfirm')) && this.store.removeArmy(item);
+      confirm(this.$t('deleteConfirm')) && this.store.removeArmy(item)
     },
 
     close() {
-      this.dialog = false;
-      this.editing = null;
+      this.dialog = false
+      this.editing = null
       setTimeout(() => {
-        this.editedItem = { ...this.defaultItem };
-        this.editedIndex = -1;
-      }, 300);
+        this.editedItem = { ...this.defaultItem }
+        this.editedIndex = -1
+      }, 300)
     },
 
     armyValid() {
@@ -211,141 +204,119 @@ export default {
         this.editItem.m === 0 &&
         this.editItem.s === 0
       ) {
-        return false;
+        return false
       }
       if (this.$refs && this.$refs.form) {
-        return this.$refs.form.validate();
+        return this.$refs.form.validate()
       }
-      return false;
+      return false
     },
 
     save() {
       if (this.armyValid()) {
-        this.saveArmy();
+        this.saveArmy()
       }
     },
 
     saveArmy() {
-      let army = armyHelper.fromEditableModel(this.editedItem);
+      let army = armyHelper.fromEditableModel(this.editedItem)
       if (this.editing) {
-        this.store.editArmy(this.editing, army);
+        this.store.editArmy(this.editing, army)
       } else {
-        this.store.addArmy(army);
+        this.store.addArmy(army)
       }
 
-      this.close();
+      this.close()
     },
 
     buildXTable(army) {
-      return armyHelper.buildXTable(army);
+      return armyHelper.buildXTable(army)
     },
 
     changeSpeed(army, speed) {
-      this.store.changeSpeed(army, speed);
-    },
-
-    customSort(items, index, isDescending) {
-      items.sort((a, b) => {
-        if (index === 'delay') {
-          if (isDescending) {
-            return b.delay - a.delay;
-          } else {
-            return a.delay - b.delay;
-          }
-        }
-        if (index === 'time') {
-          if (isDescending) {
-            return timeHelper.fullTime(b) - timeHelper.fullTime(a);
-          } else {
-            return timeHelper.fullTime(a) - timeHelper.fullTime(b);
-          }
-        }
-      });
-
-      return items;
+      this.store.changeSpeed(army, speed)
     },
 
     whenToGo(army) {
       return armyHelper
-        .whenToGo(army, this.store.state.time)
-        .format('HH:mm:ss');
+        .whenToGo(army, this.store.time)
+        .format('HH:mm:ss')
     },
 
     whenToGoCounter(army) {
-      return armyHelper.whenToGoCounter(army, this.store.state.time);
+      return armyHelper.whenToGoCounter(army, this.store.time)
     },
 
     setCountDown(army) {
       if (this.intervals[army.name]) {
-        clearInterval(this.intervals[army.name]);
+        clearInterval(this.intervals[army.name])
       }
       this.intervals[army.name] = setInterval(() => {
-        const seconds = armyHelper.whenToGoCounter(army, this.store.state.time);
-
-        this.$set(this.counters, army.name, seconds);
-      }, 1000);
+        const seconds = armyHelper.whenToGoCounter(army, this.store.time)
+        this.counters[army.name] = seconds
+      }, 1000)
     },
 
     setCountDowns() {
-      this.store.state.armies.map(this.setCountDown);
+      this.store.armies.map(this.setCountDown)
     },
 
     secondsToDuration(seconds) {
-      return timeHelper.secondsToDuration(seconds);
+      return timeHelper.secondsToDuration(seconds)
     }
   },
   computed: {
     formTitle() {
-      return this.editing ? this.$t('editArmy') : this.$t('newArmy');
+      return this.editing ? this.$t('editArmy') : this.$t('newArmy')
     },
     editableArmies() {
-      let attack = this.getAttack();
+      let attack = this.getAttack()
       if (attack) {
-        let editable = attack.armies.map(armyHelper.toEditableModel);
-        return editable;
+        let editable = attack.armies.map(armyHelper.toEditableModel)
+        return editable
       } else {
-        return [];
+        return []
       }
     },
     secondsLeft() {
-      return this.counters;
+      return this.counters
     },
     headers() {
       return [
         {
-          text: this.$t('actions'),
+          title: this.$t('actions'),
+          key: 'actions',
           sortable: false,
-          align: 'left'
+          align: 'start'
         },
         {
-          text: this.$t('armyName'),
-          align: 'left',
-          value: 'name',
+          title: this.$t('armyName'),
+          align: 'start',
+          key: 'name',
           sortable: false
         },
-        { text: this.$t('whenToGo'), sortable: true, value: 'time' },
-        { text: this.$t('countdown'), sortable: true, value: 'time' },
-        { text: this.$t('delay'), value: 'delay' },
-        { text: '1x', sortable: false },
-        { text: '2x', sortable: false },
-        { text: '3x', sortable: false },
-        { text: '4x', sortable: false },
-        { text: '5x', sortable: false },
-        { text: '6x', sortable: false }
-      ];
+        { title: this.$t('whenToGo'), key: 'whenToGo', sortable: false },
+        { title: this.$t('countdown'), key: 'countdown', sortable: false },
+        { title: this.$t('delay'), key: 'delay', sortable: true },
+        { title: '1x', key: 'x1', sortable: false },
+        { title: '2x', key: 'x2', sortable: false },
+        { title: '3x', key: 'x3', sortable: false },
+        { title: '4x', key: 'x4', sortable: false },
+        { title: '5x', key: 'x5', sortable: false },
+        { title: '6x', key: 'x6', sortable: false }
+      ]
     }
   },
   watch: {
     dialog(val) {
-      val || this.close();
+      val || this.close()
     },
     editableArmies() {
-      this.setCountDowns();
+      this.setCountDowns()
     }
   }
-};
+}
 </script>
 
 <style scoped>
-
 </style>
