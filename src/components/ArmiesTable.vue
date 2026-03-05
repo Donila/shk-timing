@@ -90,8 +90,8 @@
       hide-default-footer
     >
       <template v-slot:item="{ item }">
-        <tr>
-          <td>
+        <tr @click="cycleRowColor(item)" :style="rowStyle(item)">
+          <td @click.stop>
             <v-icon size="small" class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
             <v-icon size="small" @click="deleteItem(item)">mdi-delete</v-icon>
           </td>
@@ -134,6 +134,8 @@ export default {
       snackText: '',
       counters: {},
       intervals: {},
+      rowColorMap: {},
+      colorSequence: ['green', 'blue', 'red', 'orange', 'indigo', 'purple', 'deep-orange'],
 
       editedIndex: -1,
       editedItem: {
@@ -263,6 +265,17 @@ export default {
 
     secondsToDuration(seconds) {
       return timeHelper.secondsToDuration(seconds)
+    },
+
+    cycleRowColor(item) {
+      const current = this.rowColorMap[item.name]
+      const nextIndex = current === undefined ? 0 : (current + 1) % this.colorSequence.length
+      this.rowColorMap[item.name] = nextIndex
+    },
+
+    rowStyle(item) {
+      const idx = this.rowColorMap[item.name]
+      return idx !== undefined ? { backgroundColor: this.colorSequence[idx] } : {}
     }
   },
   computed: {
