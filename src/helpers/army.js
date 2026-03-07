@@ -21,7 +21,8 @@ const toEditableModel = (army) => {
     name: army.name,
     delay: army.delay,
     time: army.time,
-    speed: army.speed
+    speed: army.speed,
+    color: army.color || null
   }
 }
 
@@ -32,7 +33,8 @@ const fromEditableModel = (model) => {
     time: time,
     name: model.name,
     delay: parseInt(model.delay),
-    speed: parseInt(model.speed)
+    speed: parseInt(model.speed),
+    color: model.color || null
   }
 }
 

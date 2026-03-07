@@ -12,6 +12,9 @@ const convertArmyToShort = (army) => {
   if (!isNaN(army.time)) {
     newObj.t = army.time
   }
+  if (army.color) {
+    newObj.c = army.color
+  }
 
   return newObj;
 }
@@ -33,6 +36,9 @@ const convertArmyFromShort = (a) => {
 
   if (!isNaN(a.t)) {
     army.time = a.t
+  }
+  if (a.c) {
+    army.color = a.c
   }
 
   return army;
