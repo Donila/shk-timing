@@ -62,12 +62,37 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
-                    <v-text-field
+                    <v-select
                       ref="speed"
                       v-model="editedItem.speed"
                       :label="$t('speed')"
-                      :rules="[rules.required, rules.speed]"
-                    ></v-text-field>
+                      :items="speeds"
+                      item-title="text"
+                      item-value="value"
+                      :rules="[rules.required]"
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="12">
+                    <div class="text-body-2 text-medium-emphasis mb-2">Color</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">
+                      <span
+                        v-for="c in paletteColors"
+                        :key="c.value"
+                        :title="c.name"
+                        :style="{
+                          backgroundColor: c.value,
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          boxSizing: 'border-box',
+                          border: editedItem.color === c.value ? '3px solid white' : '3px solid transparent',
+                          outline: editedItem.color === c.value ? '2px solid ' + c.value : '2px solid transparent',
+                        }"
+                        @click="editedItem.color = c.value"
+                      ></span>
+                      <v-btn v-if="editedItem.color" size="x-small" variant="text" @click="editedItem.color = null">Clear</v-btn>
+                    </div>
                   </v-col>
                 </v-row>
               </v-container>
@@ -90,8 +115,8 @@
       hide-default-footer
     >
       <template v-slot:item="{ item }">
-        <tr @click="cycleRowColor(item)" :style="rowStyle(item)">
-          <td @click.stop>
+        <tr :style="item.color ? { backgroundColor: item.color + '55' } : {}"  >
+          <td>
             <v-icon size="small" class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
             <v-icon size="small" @click="deleteItem(item)">mdi-delete</v-icon>
           </td>
@@ -102,9 +127,9 @@
           <td
             v-for="(speed, index) in speeds"
             :key="speed.value"
-            :class="{ 'indigo-darken-4': item.speed - 1 == index }"
+            :class="{ 'bg-indigo-darken-4': item.speed - 1 == index }"
           >
-            <a @click="changeSpeed(item, speed.value)">{{ stringifyArmyTime(buildXTable(item)[index]) }}</a>
+            <a style="cursor: pointer" @click="changeSpeed(item, speed.value)">{{ stringifyArmyTime(buildXTable(item)[index]) }}</a>
           </td>
         </tr>
       </template>
@@ -126,6 +151,25 @@ export default {
     return {
       store: useAttackStore(),
       speeds: armyHelper.SPEEDS,
+      paletteColors: [
+        { name: 'Red', value: '#F44336' },
+        { name: 'Pink', value: '#E91E63' },
+        { name: 'Purple', value: '#9C27B0' },
+        { name: 'Indigo', value: '#3F51B5' },
+        { name: 'Blue', value: '#2196F3' },
+        { name: 'Light Blue', value: '#03A9F4' },
+        { name: 'Cyan', value: '#00BCD4' },
+        { name: 'Teal', value: '#009688' },
+        { name: 'Green', value: '#4CAF50' },
+        { name: 'Light Green', value: '#8BC34A' },
+        { name: 'Yellow', value: '#FFEB3B' },
+        { name: 'Amber', value: '#FFC107' },
+        { name: 'Orange', value: '#FF9800' },
+        { name: 'Deep Orange', value: '#FF5722' },
+        { name: 'Brown', value: '#795548' },
+        { name: 'Blue Grey', value: '#607D8B' },
+        { name: 'Grey', value: '#9E9E9E' },
+      ],
 
       dialog: false,
       editing: null,
@@ -134,8 +178,6 @@ export default {
       snackText: '',
       counters: {},
       intervals: {},
-      rowColorMap: {},
-      colorSequence: ['green', 'blue', 'red', 'orange', 'indigo', 'purple', 'deep-orange'],
 
       editedIndex: -1,
       editedItem: {
@@ -144,7 +186,8 @@ export default {
         m: 0,
         s: 0,
         delay: 0,
-        speed: 1
+        speed: 1,
+        color: null
       },
       defaultItem: {
         name: '',
@@ -152,7 +195,8 @@ export default {
         m: 0,
         s: 0,
         delay: 0,
-        speed: 1
+        speed: 1,
+        color: null
       },
 
       rules: {
@@ -182,7 +226,7 @@ export default {
     },
 
     editItem(item) {
-      this.editedItem = { ...item, speed: 1 }
+      this.editedItem = { ...item, speed: 1, color: item.color || null }
       this.dialog = true
       this.editing = item.name
     },
@@ -265,17 +309,6 @@ export default {
 
     secondsToDuration(seconds) {
       return timeHelper.secondsToDuration(seconds)
-    },
-
-    cycleRowColor(item) {
-      const current = this.rowColorMap[item.name]
-      const nextIndex = current === undefined ? 0 : (current + 1) % this.colorSequence.length
-      this.rowColorMap[item.name] = nextIndex
-    },
-
-    rowStyle(item) {
-      const idx = this.rowColorMap[item.name]
-      return idx !== undefined ? { backgroundColor: this.colorSequence[idx] } : {}
     }
   },
   computed: {
