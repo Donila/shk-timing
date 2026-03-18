@@ -38,6 +38,7 @@ const convertFromDiscordBot = (str) => {
         speed: 1,
         delay: 0,
         time: seconds,
+        color: null,
       };
     });
 

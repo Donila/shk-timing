@@ -127,7 +127,7 @@
           <td
             v-for="(speed, index) in speeds"
             :key="speed.value"
-            :class="{ 'bg-indigo-darken-4': item.speed - 1 == index }"
+            :class="{ 'bg-indigo-darken-4': (item.speed ?? 1) - 1 == index }"
           >
             <a style="cursor: pointer" @click="changeSpeed(item, speed.value)">{{ stringifyArmyTime(buildXTable(item)[index]) }}</a>
           </td>
