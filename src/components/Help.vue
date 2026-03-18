@@ -95,6 +95,7 @@
 import timingTime from '../assets/timing-time.png'
 import timedAttack from '../assets/timed_attack.jpg'
 import perfectTiming from '../assets/perfect-timing.jpg'
+import { logEvent } from '@/lib/events'
 
 export default {
   data() {
@@ -111,6 +112,11 @@ export default {
   mounted() {
     if (localStorage.helpStep) {
       this.helpStep = localStorage.helpStep
+    }
+  },
+  watch: {
+    helpDialog(val) {
+      if (val) logEvent('help_button_press')
     }
   },
   methods: {}

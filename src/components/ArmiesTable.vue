@@ -145,6 +145,7 @@
 import * as armyHelper from '@/helpers/army'
 import * as timeHelper from '@/helpers/time'
 import { useAttackStore } from '@/stores/attackStore'
+import { logEvent } from '@/lib/events'
 
 export default {
   data() {
@@ -226,13 +227,17 @@ export default {
     },
 
     editItem(item) {
+      logEvent('army_edit_button_press', { army_name: item.name })
       this.editedItem = { ...item, speed: 1, color: item.color || null }
       this.dialog = true
       this.editing = item.name
     },
 
     deleteItem(item) {
-      confirm(this.$t('deleteConfirm')) && this.store.removeArmy(item)
+      if (confirm(this.$t('deleteConfirm'))) {
+        logEvent('army_delete', item)
+        this.store.removeArmy(item)
+      }
     },
 
     close() {
@@ -267,8 +272,10 @@ export default {
     saveArmy() {
       let army = armyHelper.fromEditableModel(this.editedItem)
       if (this.editing) {
+        logEvent('army_edit', army)
         this.store.editArmy(this.editing, army)
       } else {
+        logEvent('new_army_save', army)
         this.store.addArmy(army)
       }
 
@@ -280,6 +287,7 @@ export default {
     },
 
     changeSpeed(army, speed) {
+      logEvent(`speed_change_${speed}x`, { army_name: army.name })
       this.store.changeSpeed(army, speed)
     },
 
@@ -358,6 +366,7 @@ export default {
   },
   watch: {
     dialog(val) {
+      if (val && !this.editing) logEvent('new_army_button_press')
       val || this.close()
     },
     editableArmies() {

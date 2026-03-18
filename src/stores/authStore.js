@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { logEvent } from '@/lib/events'
 
 export const MASTER_EMAILS = ['daniil.dziaruhin@gmail.com', 'wers@admin.gg']
 
@@ -16,8 +17,10 @@ export const useAuthStore = defineStore('auth', {
       this.isMaster = MASTER_EMAILS.includes(email.toLowerCase())
       this.isAuth = true
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ email: this.email, isMaster: this.isMaster }))
+      logEvent('login')
     },
     logout() {
+      logEvent('logout')
       this.email = null
       this.isMaster = false
       this.isAuth = false

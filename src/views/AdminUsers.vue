@@ -1,5 +1,9 @@
 <template>
   <v-container>
+    <v-tabs class="mb-4">
+      <v-tab :to="'/admin/users'">{{ $t('adminTabUsers') }}</v-tab>
+      <v-tab :to="'/admin/events'">{{ $t('adminTabEvents') }}</v-tab>
+    </v-tabs>
     <v-row class="mb-4" align="center">
       <v-col>
         <h1 class="text-h5">{{ $t('adminTitle') }}</h1>

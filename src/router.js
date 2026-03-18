@@ -27,8 +27,17 @@ const router = createRouter({
     },
     {
       path: '/admin',
-      name: 'admin',
-      component: () => import('./views/Admin.vue')
+      redirect: '/admin/users'
+    },
+    {
+      path: '/admin/users',
+      name: 'adminUsers',
+      component: () => import('./views/AdminUsers.vue')
+    },
+    {
+      path: '/admin/events',
+      name: 'adminEvents',
+      component: () => import('./views/AdminEvents.vue')
     }
   ]
 })
@@ -37,7 +46,7 @@ router.beforeEach((to) => {
   const auth = useAuthStore()
   if (!auth.isAuth && to.name !== 'login') return { name: 'login' }
   if (auth.isAuth && to.name === 'login') return { name: 'home' }
-  if (to.name === 'admin' && !auth.isMaster) return { name: 'home' }
+  if ((to.name === 'adminUsers' || to.name === 'adminEvents') && !auth.isMaster) return { name: 'home' }
 })
 
 export default router

@@ -46,11 +46,17 @@
 </template>
 
 <script>
-import { supabase } from '@/lib/supabase'
+import { dbSelect, dbInsert } from '@/lib/db'
 import { useAuthStore, MASTER_EMAILS } from '@/stores/authStore'
 
 export default {
   data() {
+    const now = Date.now()
+    const requestResetAt = parseInt(sessionStorage.getItem('requestTriesResetAt') || '0')
+    if (now - requestResetAt > 3600000) {
+      sessionStorage.setItem('requestTries', '0')
+      sessionStorage.setItem('requestTriesResetAt', now.toString())
+    }
     return {
       email: '',
       loginError: '',
@@ -64,7 +70,7 @@ export default {
   },
   computed: {
     loginBlocked() {
-      return this.loginTries >= 3
+      return !import.meta.env.DEV && this.loginTries >= 3
     }
   },
   methods: {
@@ -81,12 +87,11 @@ export default {
         return
       }
 
-      const { data } = await supabase
-        .from('whitelist')
-        .select('email, status')
-        .eq('email', emailLower)
-        .eq('status', 'granted')
-        .maybeSingle()
+      const rows = await dbSelect('whitelist', {
+        select: 'email,status',
+        eq: { email: emailLower, status: 'granted' }
+      })
+      const data = rows && rows.length > 0 ? rows[0] : null
 
       this.loginLoading = false
 
@@ -103,11 +108,11 @@ export default {
     },
 
     async doRequestAccess() {
-      if (this.requestTries >= 3 || !this.email.trim()) return
+      if ((!import.meta.env.DEV && this.requestTries >= 3) || !this.email.trim()) return
       this.requestLoading = true
 
       const emailLower = this.email.toLowerCase().trim()
-      await supabase.from('whitelist').insert({ email: emailLower, status: 'waiting' })
+      await dbInsert('whitelist', { email: emailLower, status: 'waiting' })
 
       this.requestTries++
       sessionStorage.setItem('requestTries', this.requestTries.toString())

@@ -60,6 +60,7 @@ import Help from '@/components/Help.vue'
 import Languages from '@/components/Languages.vue'
 import { useAttackStore } from '@/stores/attackStore'
 import { useAuthStore } from '@/stores/authStore'
+import { logEvent } from '@/lib/events'
 
 export default {
   components: {
@@ -75,6 +76,7 @@ export default {
   },
   methods: {
     home() {
+      logEvent('new_attack_button_press')
       this.store.newAttack()
       this.$router.push({ name: 'home', params: { atk: '' } })
     },

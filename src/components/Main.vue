@@ -12,7 +12,7 @@
         :fullscreen="$vuetify.display.xs"
       >
         <template v-slot:activator="{ props }">
-          <v-btn color="info" v-bind="props">
+          <v-btn color="info" v-bind="props" @click="logEvent('discord_button_press')">
             <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="discord" style="width: 30px;">
           </v-btn>
         </template>
@@ -41,6 +41,7 @@ import * as urlConverter from '@/helpers/urlConverter'
 import * as attackHelper from '@/helpers/attack'
 import * as discordParserHelper from '@/helpers/discordBotArmiesParser'
 import { useAttackStore } from '@/stores/attackStore'
+import { logEvent } from '@/lib/events'
 
 import ArmiesTable from '@/components/ArmiesTable.vue'
 import TimeX from '@/components/TimeX.vue'
@@ -76,6 +77,7 @@ export default {
       }
     },
     share() {
+      logEvent('share_link', this.getAttack())
       let atk = urlConverter.convertAttackToUrl(this.getAttack())
       this.$router.push({ name: 'attack', params: { atk } })
     },
@@ -96,6 +98,7 @@ export default {
           armies.forEach(army => {
             this.store.addArmy(army)
           })
+          logEvent('parse_discord_armies', { armies })
         }
         // eslint-disable-next-line no-empty
       } catch (e) {
@@ -103,7 +106,8 @@ export default {
       }
       this.pastedFromBot = ''
       this.dialog = false
-    }
+    },
+    logEvent
   },
   mounted() {
     this.setAttackFromUrl()

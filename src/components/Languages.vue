@@ -25,6 +25,7 @@
 import ruFlag from '../assets/ru.png'
 import enFlag from '../assets/en.png'
 import plFlag from '../assets/pl.png'
+import { logEvent } from '@/lib/events'
 
 export default {
   data() {
@@ -40,16 +41,17 @@ export default {
   mounted() {
     if (localStorage.locale) {
       let language = this.languages.find(l => l.name === localStorage.locale)
-      this.changeLanguage(language)
+      this.changeLanguage(language, false)
     } else {
       this.lang = this.languages[0]
     }
   },
   methods: {
-    changeLanguage(lang) {
+    changeLanguage(lang, track = true) {
       this.$i18n.locale = lang.name
       this.lang = lang
       localStorage.locale = lang.name
+      if (track) logEvent('change_language', { language: lang.name })
     }
   }
 }
