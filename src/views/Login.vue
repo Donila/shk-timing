@@ -1,9 +1,9 @@
 <template>
-  <v-container class="fill-height" fluid>
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="4">
+  <v-container fluid style="min-height: 100vh; display: flex; align-items: center; padding: 0;">
+    <v-row align="center" class="ma-0" style="width: 100%; justify-content: space-evenly;">
+      <v-col cols="12" sm="6" md="5" lg="4">
         <v-card>
-          <v-card-title class="pa-4">{{ $t('titleShort') }}</v-card-title>
+          <v-card-title class="pa-4 justify-center">{{ $t('titleShort') }}</v-card-title>
           <v-card-text class="pa-4 pb-0">
             <v-text-field
               v-model="email"
@@ -11,7 +11,9 @@
               type="email"
               variant="outlined"
               :disabled="loginBlocked"
+              :error-messages="emailError"
               @keyup.enter="doLogin"
+              @blur="validateEmail"
             />
             <v-alert v-if="loginError" type="error" class="mb-3" density="compact">
               {{ loginError }}
@@ -19,24 +21,39 @@
           </v-card-text>
           <v-card-actions class="pa-4 pt-2">
             <v-btn
-              color="primary"
+              color="success"
               variant="flat"
-              :disabled="loginBlocked || !email.trim()"
+              size="large"
+              :disabled="loginBlocked || !isValidEmail"
               :loading="loginLoading"
               @click="doLogin"
             >
               {{ $t('login') }}
             </v-btn>
-            <v-btn
-              variant="text"
-              :disabled="!email.trim()"
-              :loading="requestLoading"
-              @click="doRequestAccess"
-            >
-              {{ $t('requestAccess') }}
-            </v-btn>
+            <v-tooltip :text="$t('enterEmailFirst')" :disabled="!!email.trim()">
+              <template #activator="{ props }">
+                <span v-bind="props">
+                  <v-btn
+                    variant="text"
+                    size="large"
+                    :disabled="!isValidEmail"
+                    :loading="requestLoading"
+                    @click="doRequestAccess"
+                  >
+                    {{ $t('requestAccess') }}
+                  </v-btn>
+                </span>
+              </template>
+            </v-tooltip>
           </v-card-actions>
         </v-card>
+      </v-col>
+      <v-col cols="12" sm="5" md="4" lg="3" class="d-flex align-center">
+        <v-img
+          :src="logoImg"
+          :max-height="imgMaxHeight"
+          contain
+        />
       </v-col>
     </v-row>
     <v-snackbar v-model="snackbar" color="success" :timeout="3000">
@@ -48,6 +65,7 @@
 <script>
 import { dbSelect, dbInsert } from '@/lib/db'
 import { useAuthStore, MASTER_EMAILS } from '@/stores/authStore'
+import logoImg from '@/assets/wers2.png'
 
 export default {
   data() {
@@ -58,7 +76,9 @@ export default {
       sessionStorage.setItem('requestTriesResetAt', now.toString())
     }
     return {
+      logoImg,
       email: '',
+      emailError: '',
       loginError: '',
       snackbar: false,
       loginLoading: false,
@@ -71,11 +91,24 @@ export default {
   computed: {
     loginBlocked() {
       return !import.meta.env.DEV && this.loginTries >= 3
+    },
+    isValidEmail() {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email.trim())
+    },
+    imgMaxHeight() {
+      return window.innerHeight - 80
     }
   },
   methods: {
+    validateEmail() {
+      if (this.email.trim() && !this.isValidEmail) {
+        this.emailError = this.$t('emailInvalid')
+      } else {
+        this.emailError = ''
+      }
+    },
     async doLogin() {
-      if (this.loginBlocked || !this.email.trim()) return
+      if (this.loginBlocked || !this.isValidEmail) return
       this.loginError = ''
       this.loginLoading = true
 
@@ -108,7 +141,7 @@ export default {
     },
 
     async doRequestAccess() {
-      if ((!import.meta.env.DEV && this.requestTries >= 3) || !this.email.trim()) return
+      if ((!import.meta.env.DEV && this.requestTries >= 3) || !this.isValidEmail) return
       this.requestLoading = true
 
       const emailLower = this.email.toLowerCase().trim()

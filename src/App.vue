@@ -33,7 +33,7 @@
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
-      <v-app-bar app>
+      <v-app-bar v-if="$route.name !== 'login'" app>
         <v-app-bar-nav-icon v-if="authStore.isAuth" class="d-lg-none" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title class="d-none d-lg-flex">{{ $t("title") }}</v-toolbar-title>
         <v-toolbar-title class="d-lg-none">{{ $t("titleShort") }}</v-toolbar-title>
@@ -46,11 +46,14 @@
         </div>
       </v-app-bar>
       <v-main>
-        <v-container fluid>
+        <template v-if="$route.name === 'login'">
+          <router-view></router-view>
+        </template>
+        <v-container v-else fluid>
           <router-view></router-view>
         </v-container>
       </v-main>
-      <v-footer app></v-footer>
+      <v-footer v-if="$route.name !== 'login'" app></v-footer>
     </v-app>
   </div>
 </template>

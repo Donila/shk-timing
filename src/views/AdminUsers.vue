@@ -8,13 +8,25 @@
       <v-col>
         <h1 class="text-h5">{{ $t('adminTitle') }}</h1>
       </v-col>
-      <v-col class="text-right">
+      <v-col cols="auto">
+        <v-select
+          v-model="statusFilter"
+          :items="statusOptions"
+          :label="$t('adminStatus')"
+          variant="outlined"
+          density="compact"
+          hide-details
+          clearable
+          style="min-width: 180px"
+        />
+      </v-col>
+      <v-col class="text-right" cols="auto">
         <v-btn color="error" variant="text" @click="doLogout">{{ $t('logout') }}</v-btn>
       </v-col>
     </v-row>
     <v-data-table
       :headers="headers"
-      :items="items"
+      :items="filteredItems"
       :loading="loading"
     >
       <template #item.status="{ item }">
@@ -50,7 +62,7 @@
           {{ $t('adminDecline') }}
         </v-btn>
         <v-btn
-          v-if="item.status === 'granted'"
+          v-if="item.status === 'granted' && !isMaster(item.email)"
           color="error"
           size="small"
           variant="flat"
@@ -65,13 +77,14 @@
 
 <script>
 import { dbSelect, dbUpdate, dbDelete } from '@/lib/db'
-import { useAuthStore } from '@/stores/authStore'
+import { useAuthStore, MASTER_EMAILS } from '@/stores/authStore'
 
 export default {
   data() {
     return {
       items: [],
       loading: false,
+      statusFilter: 'waiting',
       store: useAuthStore()
     }
   },
@@ -83,12 +96,25 @@ export default {
         { title: this.$t('adminCreatedAt'), key: 'created_at' },
         { title: this.$t('adminActions'), key: 'actions', sortable: false }
       ]
+    },
+    statusOptions() {
+      return [
+        { title: this.$t('adminStatusWaiting'), value: 'waiting' },
+        { title: this.$t('adminStatusGranted'), value: 'granted' }
+      ]
+    },
+    filteredItems() {
+      if (!this.statusFilter) return this.items
+      return this.items.filter(i => i.status === this.statusFilter)
     }
   },
   async mounted() {
     await this.load()
   },
   methods: {
+    isMaster(email) {
+      return MASTER_EMAILS.includes(email?.toLowerCase())
+    },
     async load() {
       this.loading = true
       const data = await dbSelect('whitelist', { select: '*', order: 'created_at.desc' })

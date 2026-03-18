@@ -3,7 +3,7 @@ import { createI18n } from 'vue-i18n'
 const messages = {
   'en': {
     title: 'Tool for timing attacks in Stronghold Kingdoms',
-    titleShort: 'SHK Timing',
+    titleShort: 'Stronghold Kingdoms Timing by Wers1814',
     serverTime: 'Server Time',
     timingTime: 'Timing time',
     hhMM: 'HH:MM',
@@ -50,6 +50,8 @@ const messages = {
     requestAccess: 'Request Access',
     requestSuccess: 'Request accessed',
     emailLabel: 'Email',
+    emailInvalid: 'Enter a valid email address',
+    enterEmailFirst: 'Enter email first',
     loginFailed: 'Email not in whitelist',
     loginBlocked: 'Too many attempts. Try again later.',
     logout: 'Logout',
@@ -81,7 +83,7 @@ const messages = {
   },
   'ru': {
     title: 'Приблуда для тайминга аттак в Stronghold Kingdoms',
-    titleShort: 'SHK Тайминг',
+    titleShort: 'Stronghold Kingdoms Тайминг by Wers1814',
     serverTime: 'Серверное Время',
     timingTime: 'Время Атаки',
     hhMM: 'ЧЧ:ММ',
@@ -127,6 +129,8 @@ const messages = {
     requestAccess: 'Запросить доступ',
     requestSuccess: 'Запрос отправлен',
     emailLabel: 'Эл. почта',
+    emailInvalid: 'Введите корректный email адрес',
+    enterEmailFirst: 'Сначала введите email',
     loginFailed: 'Email не в списке доступа',
     loginBlocked: 'Слишком много попыток. Попробуйте позже.',
     logout: 'Выйти',
@@ -158,7 +162,7 @@ const messages = {
   },
   'pl': {
     title: 'Atak czasowy w Stronghold Kingdoms',
-    titleShort: 'SHK Timing',
+    titleShort: 'Stronghold Kingdoms Timing by Wers1814',
     serverTime: 'Czas Serwera',
     timingTime: 'Czas Ataku',
     hhMM: 'GG:MM',
@@ -203,6 +207,8 @@ const messages = {
     requestAccess: 'Poproś o dostęp',
     requestSuccess: 'Prośba wysłana',
     emailLabel: 'E-mail',
+    emailInvalid: 'Wprowadź prawidłowy adres e-mail',
+    enterEmailFirst: 'Najpierw wpisz e-mail',
     loginFailed: 'E-mail nie na liście dostępu',
     loginBlocked: 'Zbyt wiele prób. Spróbuj później.',
     logout: 'Wyloguj',
